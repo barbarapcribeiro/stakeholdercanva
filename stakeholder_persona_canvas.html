@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stakeholder Persona Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .canvas {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .left-panel, .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .basic-info { border-left-color: #e74c3c; }
+        .emotional { border-left-color: #f39c12; }
+        .motivations { border-left-color: #2ecc71; }
+        .communication { border-left-color: #3498db; }
+        .resistance { border-left-color: #9b59b6; }
+        .engagement { border-left-color: #1abc9c; }
+
+        .section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .basic-info .icon { background: #e74c3c; }
+        .emotional .icon { background: #f39c12; }
+        .motivations .icon { background: #2ecc71; }
+        .communication .icon { background: #3498db; }
+        .resistance .icon { background: #9b59b6; }
+        .engagement .icon { background: #1abc9c; }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + label {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .actions {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            margin: 20px 40px;
+            border-radius: 15px;
+        }
+
+        .instructions h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .instructions ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .instructions li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #fdcb6e;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .canvas {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Stakeholder Persona Canvas</h1>
+            <p>Ferramenta de Mapeamento Profundo de Stakeholders para Change Management</p>
+        </div>
+
+        <div class="instructions">
+            <h4>📋 Como usar esta ferramenta:</h4>
+            <ul>
+                <li>Preencha cada seção com informações específicas sobre seu stakeholder</li>
+                <li>Use dados reais coletados através de entrevistas, observação e pesquisas</li>
+                <li>Foque em comportamentos observáveis, não suposições</li>
+                <li>Revise e atualize regularmente durante o processo de mudança</li>
+                <li>Use as informações para personalizar sua estratégia de engajamento</li>
+            </ul>
+        </div>
+
+        <form class="canvas">
+            <div class="left-panel">
+                <div class="section basic-info">
+                    <h3><span class="icon">1</span> Informações Básicas</h3>
+                    <div class="input-group">
+                        <label for="name">Nome/Título do Stakeholder:</label>
+                        <input type="text" id="name" name="name" placeholder="Ex: Maria Silva - Gerente de Operações">
+                    </div>
+                    <div class="input-group">
+                        <label for="role">Função/Departamento:</label>
+                        <input type="text" id="role" name="role" placeholder="Ex: Liderança de equipe de 15 pessoas">
+                    </div>
+                    <div class="input-group">
+                        <label for="influence">Nível de Influência:</label>
+                        <select id="influence" name="influence">
+                            <option value="">Selecione...</option>
+                            <option value="alto">Alto - Decisor final</option>
+                            <option value="medio">Médio - Influencia decisões</option>
+                            <option value="baixo">Baixo - Recebe decisões</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="interest">Nível de Interesse na Mudança:</label>
+                        <select id="interest" name="interest">
+                            <option value="">Selecione...</option>
+                            <option value="alto">Alto - Muito impactado</option>
+                            <option value="medio">Médio - Moderadamente impactado</option>
+                            <option value="baixo">Baixo - Pouco impactado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section emotional">
+                    <h3><span class="icon">2</span> Perfil Emocional</h3>
+                    <div class="input-group">
+                        <label for="fears">Principais Medos em Relação à Mudança:</label>
+                        <textarea id="fears" name="fears" placeholder="Ex: Perda de autonomia, sobrecarga de trabalho, obsolescência de habilidades..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="emotional-state">Estado Emocional Atual:</label>
+                        <select id="emotional-state" name="emotional-state">
+                            <option value="">Selecione...</option>
+                            <option value="negacao">Negação - "Isso não vai acontecer"</option>
+                            <option value="raiva">Raiva - "Isso é injusto"</option>
+                            <option value="barganha">Barganha - "E se fizermos diferente?"</option>
+                            <option value="depressao">Tristeza - "Não consigo lidar"</option>
+                            <option value="aceitacao">Aceitação - "Vamos fazer dar certo"</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="triggers">Gatilhos Emocionais (O que os irrita?):</label>
+                        <textarea id="triggers" name="triggers" placeholder="Ex: Falta de transparência, mudanças impostas, comunicação top-down..."></textarea>
+                    </div>
+                </div>
+
+                <div class="section motivations">
+                    <h3><span class="icon">3</span> Motivações & Objetivos</h3>
+                    <div class="input-group">
+                        <label for="goals">Objetivos Pessoais/Profissionais:</label>
+                        <textarea id="goals" name="goals" placeholder="Ex: Crescimento na carreira, reconhecimento, estabilidade..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="benefits">Como a Mudança Pode Beneficiá-lo:</label>
+                        <textarea id="benefits" name="benefits" placeholder="Ex: Novas oportunidades, processos mais eficientes, desenvolvimento de habilidades..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="wiifm">WIIFM - "What's In It For Me?":</label>
+                        <textarea id="wiifm" name="wiifm" placeholder="A mensagem-chave que responde 'O que eu ganho com isso?'"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="section communication">
+                    <h3><span class="icon">4</span> Perfil de Comunicação (PNL)</h3>
+                    <div class="input-group">
+                        <label>Sistema Representacional Preferido:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="visual" name="rep-system" value="visual">
+                                <label for="visual">Visual (gráficos, diagramas)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="auditivo" name="rep-system" value="auditivo">
+                                <label for="auditivo">Auditivo (conversas, podcasts)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cinestesico" name="rep-system" value="cinestesico">
+                                <label for="cinestesico">Cinestésico (hands-on, prática)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="communication-style">Estilo de Comunicação Preferido:</label>
+                        <select id="communication-style" name="communication-style">
+                            <option value="">Selecione...</option>
+                            <option value="direto">Direto - Fatos e números</option>
+                            <option value="relacional">Relacional - Histórias e conexões</option>
+                            <option value="analitico">Analítico - Dados e lógica</option>
+                            <option value="visionario">Visionário - Futuro e possibilidades</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="preferred-channel">Canal de Comunicação Preferido:</label>
+                        <textarea id="preferred-channel" name="preferred-channel" placeholder="Ex: Reuniões presenciais, e-mails, conversas informais..."></textarea>
+                    </div>
+                </div>
+
+                <div class="section resistance">
+                    <h3><span class="icon">5</span> Padrões de Resistência</h3>
+                    <div class="input-group">
+                        <label for="resistance-type">Tipo de Resistência Observada:</label>
+                        <select id="resistance-type" name="resistance-type">
+                            <option value="">Selecione...</option>
+                            <option value="ativa">Ativa - Confronta abertamente</option>
+                            <option value="passiva">Passiva - Sabotagem silenciosa</option>
+                            <option value="intelectual">Intelectual - Questiona logicamente</option>
+                            <option value="emocional">Emocional - Reações defensivas</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="resistance-signals">Sinais Observáveis de Resistência:</label>
+                        <textarea id="resistance-signals" name="resistance-signals" placeholder="Ex: Linguagem corporal fechada, questionamentos excessivos, ausências em reuniões..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="past-changes">Comportamento em Mudanças Anteriores:</label>
+                        <textarea id="past-changes" name="past-changes" placeholder="Como reagiu a mudanças no passado? Que padrões podem se repetir?"></textarea>
+                    </div>
+                </div>
+
+                <div class="section engagement">
+                    <h3><span class="icon">6</span> Estratégia de Engajamento</h3>
+                    <div class="input-group">
+                        <label for="engagement-approach">Abordagem Recomendada:</label>
+                        <textarea id="engagement-approach" name="engagement-approach" placeholder="Baseado no perfil, qual a melhor forma de engajar este stakeholder?"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="key-messages">Mensagens-Chave Personalizadas:</label>
+                        <textarea id="key-messages" name="key-messages" placeholder="Que mensagens específicas ressoam com este perfil?"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="action-plan">Plano de Ação Específico:</label>
+                        <textarea id="action-plan" name="action-plan" placeholder="Próximos passos concretos para engajar este stakeholder..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="success-metrics">Métricas de Sucesso:</label>
+                        <textarea id="success-metrics" name="success-metrics" placeholder="Como você saberá que o engajamento está funcionando?"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="actions">
+            <button type="button" class="btn btn-secondary" onclick="clearForm()">🔄 Limpar Tudo</button>
+            <button type="button" class="btn btn-primary" onclick="generateSummary()">📊 Gerar Resumo</button>
+            <button type="button" class="btn btn-primary" onclick="exportPDF()">📄 Exportar PDF</button>
+        </div>
+    </div>
+
+    <script>
+        function clearForm() {
+            if (confirm('Tem certeza que deseja limpar todos os campos?')) {
+                document.querySelector('form').reset();
+            }
+        }
+
+        function generateSummary() {
+            const formData = new FormData(document.querySelector('form'));
+            const data = {};
+            
+            // Coleta todos os dados do formulário
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+
+            // Gera um resumo executivo
+            let summary = `
+            📋 RESUMO EXECUTIVO - STAKEHOLDER PERSONA
+            
+            👤 STAKEHOLDER: ${data.name || 'Não informado'}
+            🏢 FUNÇÃO: ${data.role || 'Não informado'}
+            
+            📊 CLASSIFICAÇÃO:
+            • Influência: ${data.influence || 'Não definido'}
+            • Interesse: ${data.interest || 'Não definido'}
+            
+            😨 PRINCIPAIS PREOCUPAÇÕES:
+            ${data.fears || 'Não identificadas'}
+            
+            🎯 ESTRATÉGIA RECOMENDADA:
+            ${data['engagement-approach'] || 'Não definida'}
+            
+            💬 MENSAGEM-CHAVE:
+            ${data.wiifm || 'Não definida'}
+            
+            📈 MÉTRICAS DE SUCESSO:
+            ${data['success-metrics'] || 'Não definidas'}
+            `;
+
+            // Exibe o resumo em uma nova janela ou modal
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Resumo Stakeholder Persona</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+                            pre { background: #f4f4f4; padding: 15px; border-radius: 5px; white-space: pre-wrap; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Stakeholder Persona Canvas - Resumo</h1>
+                        <pre>${summary}</pre>
+                        <button onclick="window.print()">🖨️ Imprimir</button>
+                        <button onclick="window.close()">❌ Fechar</button>
+                    </body>
+                </html>
+            `);
+        }
+
+        function exportPDF() {
+            alert('💡 Dica: Use a função "Imprimir" do seu navegador e selecione "Salvar como PDF" para exportar este canvas!');
+            window.print();
+        }
+
+        // Adiciona interatividade visual
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input, textarea, select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.parentElement.style.transform = 'scale(1.02)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.parentElement.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
