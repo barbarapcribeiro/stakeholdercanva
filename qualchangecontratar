@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Management: Interno vs Consultoria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border-left: 5px solid #4ECDC4;
+        }
+        
+        .question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: #4ECDC4;
+            background: #e8f5e8;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .result-interno {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .result-consultoria {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .result-hibrido {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .result-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .result-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .action-items {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-items h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .action-items ul {
+            text-align: left;
+            list-style: none;
+        }
+        
+        .action-items li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .action-items li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .score-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .score-item {
+            padding: 15px 20px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            min-width: 120px;
+        }
+        
+        .reset-btn {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+        
+        .reset-btn:hover {
+            background: white;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">🎯 DECISOR INTELIGENTE</h1>
+        <p class="subtitle">Descubra a melhor estratégia de Change Management para sua organização</p>
+        
+        <form id="decisionForm">
+            <div class="section">
+                <div class="question">1. Qual o prazo para implementar a mudança?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="prazo" value="urgente">
+                        🚨 Urgente (menos de 3 meses) - Precisamos de resultados rápidos
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="prazo" value="medio">
+                        ⏰ Médio prazo (3-12 meses) - Temos tempo para planejar bem
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="prazo" value="longo">
+                        📅 Longo prazo (mais de 12 meses) - Transformação gradual
+                    </label>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="question">2. Qual o orçamento disponível para Change Management?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="orcamento" value="limitado">
+                        💰 Limitado - Precisamos otimizar custos
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="orcamento" value="moderado">
+                        💳 Moderado - Temos recursos para investir
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="orcamento" value="amplo">
+                        💎 Amplo - Custo não é a principal preocupação
+                    </label>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="question">3. Qual a experiência interna em Change Management?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="experiencia" value="inexperiente">
+                        🌱 Iniciante - Primeira vez lidando com mudanças grandes
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="experiencia" value="intermediario">
+                        📈 Intermediário - Já fizemos algumas mudanças com sucesso
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="experiencia" value="experiente">
+                        🎯 Experiente - Temos histórico sólido em transformações
+                    </label>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="question">4. Qual a complexidade da mudança?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="complexidade" value="simples">
+                        🔧 Simples - Mudança de processo ou ferramenta específica
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="complexidade" value="media">
+                        ⚙️ Média - Envolve múltiplas áreas e processos
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="complexidade" value="alta">
+                        🧩 Alta - Transformação cultural, estrutural ou digital completa
+                    </label>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="question">5. Qual o nível de resistência esperado?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="resistencia" value="baixa">
+                        😊 Baixa - Equipe está receptiva e motivada
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="resistencia" value="media">
+                        😐 Média - Algum ceticismo, mas nada muito preocupante
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="resistencia" value="alta">
+                        😰 Alta - Forte resistência e histórico de mudanças mal-sucedidas
+                    </label>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="question">6. Quanto conhecimento interno você tem da cultura organizacional?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="cultura" value="profundo">
+                        🏛️ Profundo - Conhecemos muito bem nossa cultura e pessoas
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="cultura" value="moderado">
+                        🏢 Moderado - Conhecemos bem, mas há nuances que escapam
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="cultura" value="superficial">
+                        🌐 Superficial - Empresa nova ou cultura muito complexa
+                    </label>
+                </div>
+            </div>
+
+            <button type="button" class="calculate-btn" onclick="calculateResult()">
+                🧮 CALCULAR RECOMENDAÇÃO
+            </button>
+        </form>
+
+        <div id="result" class="result-container">
+            <div class="result-title" id="resultTitle"></div>
+            <div class="score-display" id="scoreDisplay"></div>
+            <div class="result-description" id="resultDescription"></div>
+            <div class="action-items" id="actionItems"></div>
+            <button class="reset-btn" onclick="resetForm()">🔄 Nova Análise</button>
+        </div>
+    </div>
+
+    <script>
+        // Adicionar efeito visual quando opção for selecionada
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove seleção anterior do mesmo grupo
+                document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                    r.closest('.option').classList.remove('selected');
+                });
+                // Adiciona seleção atual
+                this.closest('.option').classList.add('selected');
+            });
+        });
+
+        function calculateResult() {
+            const form = document.getElementById('decisionForm');
+            const formData = new FormData(form);
+            
+            // Verificar se todas as perguntas foram respondidas
+            const requiredFields = ['prazo', 'orcamento', 'experiencia', 'complexidade', 'resistencia', 'cultura'];
+            const missingFields = requiredFields.filter(field => !formData.get(field));
+            
+            if (missingFields.length > 0) {
+                alert('Por favor, responda todas as perguntas antes de calcular.');
+                return;
+            }
+
+            // Sistema de pontuação
+            let pontuacaoInterno = 0;
+            let pontuacaoConsultoria = 0;
+            let pontuacaoHibrido = 0;
+
+            // Análise do prazo
+            const prazo = formData.get('prazo');
+            if (prazo === 'urgente') {
+                pontuacaoConsultoria += 3;
+                pontuacaoHibrido += 2;
+            } else if (prazo === 'medio') {
+                pontuacaoHibrido += 3;
+                pontuacaoInterno += 2;
+                pontuacaoConsultoria += 2;
+            } else {
+                pontuacaoInterno += 3;
+                pontuacaoHibrido += 1;
+            }
+
+            // Análise do orçamento
+            const orcamento = formData.get('orcamento');
+            if (orcamento === 'limitado') {
+                pontuacaoInterno += 3;
+            } else if (orcamento === 'moderado') {
+                pontuacaoHibrido += 3;
+                pontuacaoInterno += 1;
+            } else {
+                pontuacaoConsultoria += 3;
+                pontuacaoHibrido += 2;
+            }
+
+            // Análise da experiência
+            const experiencia = formData.get('experiencia');
+            if (experiencia === 'inexperiente') {
+                pontuacaoConsultoria += 3;
+                pontuacaoHibrido += 2;
+            } else if (experiencia === 'intermediario') {
+                pontuacaoHibrido += 3;
+                pontuacaoConsultoria += 1;
+                pontuacaoInterno += 1;
+            } else {
+                pontuacaoInterno += 3;
+                pontuacaoHibrido += 1;
+            }
+
+            // Análise da complexidade
+            const complexidade = formData.get('complexidade');
+            if (complexidade === 'simples') {
+                pontuacaoInterno += 2;
+                pontuacaoHibrido += 1;
+            } else if (complexidade === 'media') {
+                pontuacaoHibrido += 3;
+                pontuacaoConsultoria += 2;
+                pontuacaoInterno += 1;
+            } else {
+                pontuacaoConsultoria += 3;
+                pontuacaoHibrido += 2;
+            }
+
+            // Análise da resistência
+            const resistencia = formData.get('resistencia');
+            if (resistencia === 'baixa') {
+                pontuacaoInterno += 2;
+                pontuacaoHibrido += 1;
+            } else if (resistencia === 'media') {
+                pontuacaoHibrido += 2;
+                pontuacaoConsultoria += 1;
+                pontuacaoInterno += 1;
+            } else {
+                pontuacaoConsultoria += 3;
+                pontuacaoHibrido += 2;
+            }
+
+            // Análise da cultura
+            const cultura = formData.get('cultura');
+            if (cultura === 'profundo') {
+                pontuacaoInterno += 3;
+                pontuacaoHibrido += 1;
+            } else if (cultura === 'moderado') {
+                pontuacaoHibrido += 2;
+                pontuacaoInterno += 1;
+                pontuacaoConsultoria += 1;
+            } else {
+                pontuacaoConsultoria += 2;
+                pontuacaoHibrido += 1;
+            }
+
+            // Determinar resultado
+            const maxPontuacao = Math.max(pontuacaoInterno, pontuacaoConsultoria, pontuacaoHibrido);
+            let resultado, classe, descricao, acoes;
+
+            if (maxPontuacao === pontuacaoInterno) {
+                resultado = "🏢 EQUIPE INTERNA";
+                classe = "result-interno";
+                descricao = "Sua organização tem as condições ideais para conduzir a mudança internamente. Você tem tempo, conhecimento da cultura e experiência necessária.";
+                acoes = [
+                    "Forme uma equipe dedicada de Change Management",
+                    "Invista em capacitação da equipe interna",
+                    "Desenvolva um plano de comunicação robusto",
+                    "Crie métricas de acompanhamento interno",
+                    "Estabeleça uma rede de embaixadores da mudança"
+                ];
+            } else if (maxPontuacao === pontuacaoConsultoria) {
+                resultado = "🚀 CONSULTORIA EXTERNA";
+                classe = "result-consultoria";
+                descricao = "Sua situação requer expertise especializada e agilidade. Uma consultoria externa trará a experiência e imparcialidade necessárias para o sucesso.";
+                acoes = [
+                    "Selecione consultoria com experiência no seu setor",
+                    "Defina KPIs claros de sucesso",
+                    "Estabeleça um comitê interno de acompanhamento",
+                    "Planeje transferência de conhecimento",
+                    "Garanta envolvimento da liderança sênior"
+                ];
+            } else {
+                resultado = "🤝 ABORDAGEM HÍBRIDA";
+                classe = "result-hibrido";
+                descricao = "A combinação perfeita! Use consultoria para design e estratégia, mas mantenha a execução internamente para garantir aderência cultural e sustentabilidade.";
+                acoes = [
+                    "Consultoria para diagnóstico e estratégia inicial",
+                    "Equipe interna para execução e sustentação",
+                    "Workshops conjuntos para transferência de conhecimento",
+                    "Governança compartilhada do projeto",
+                    "Plano de autonomização gradual da equipe interna"
+                ];
+            }
+
+            // Exibir resultado
+            document.getElementById('resultTitle').textContent = resultado;
+            document.getElementById('scoreDisplay').innerHTML = `
+                <div class="score-item">
+                    <div>Interno</div>
+                    <div>${pontuacaoInterno} pts</div>
+                </div>
+                <div class="score-item">
+                    <div>Consultoria</div>
+                    <div>${pontuacaoConsultoria} pts</div>
+                </div>
+                <div class="score-item">
+                    <div>Híbrido</div>
+                    <div>${pontuacaoHibrido} pts</div>
+                </div>
+            `;
+            document.getElementById('resultDescription').textContent = descricao;
+            document.getElementById('actionItems').innerHTML = `
+                <h3>📋 Próximos Passos Recomendados:</h3>
+                <ul>
+                    ${acoes.map(acao => `<li>${acao}</li>`).join('')}
+                </ul>
+            `;
+
+            const resultContainer = document.getElementById('result');
+            resultContainer.className = `result-container ${classe}`;
+            resultContainer.style.display = 'block';
+            
+            // Scroll suave para o resultado
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('decisionForm').reset();
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('result').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
